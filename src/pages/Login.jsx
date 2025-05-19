@@ -1,0 +1,74 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Container, Form, Button } from 'react-bootstrap';
+import logo from '../assets/logo.png';
+
+const Login = () => {
+  const navigate = useNavigate();  // <-- ici la déclaration de navigate
+
+  return (
+    <div style={{ backgroundColor: '#EBF3FF', minHeight: '50vh', fontFamily: 'Arial, sans-serif' }}>
+      {/* Header */}
+      <Container fluid className="d-flex justify-content-between align-items-center px-4" style={{ paddingTop: '1px', paddingBottom: '5px' }}>
+        <div style={{ maxWidth: '160px' }}>
+          <img src={logo} alt="Logo" style={{ width: '100%', height: 'auto' }} />
+        </div>
+        <div>
+         <Button
+            variant="outline-dark"
+            className="me-2"
+            onClick={() => navigate('/choix-inscription')}>
+               S’inscrire
+            </Button>
+        </div>
+      </Container>
+
+      {/* Form Card */}
+      <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '65vh' }}>
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '16px',
+          padding: '30px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          width: '100%',
+          maxWidth: '450px'
+        }}>
+          <h2 className="text-center mb-4" style={{ color: '#004085', fontWeight: 'bold' }}>
+            Connexion
+          </h2>
+
+          <Form>
+            <Form.Group controlId="formEmail" className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Entrez votre email" required />
+            </Form.Group>
+
+            <Form.Group controlId="formPassword" className="mb-3">
+              <Form.Label>Mot de passe</Form.Label>
+              <Form.Control type="password" placeholder="Mot de passe" required />
+            </Form.Group>
+
+            <div className="d-flex justify-content-center mt-4">
+              <Button variant="dark" type="submit" style={{ borderRadius: '8px', padding: '10px 24px', width: '40%' }}>
+                Se connecter
+              </Button>
+            </div>
+          </Form>
+        </div>
+      </Container>
+
+      {/* Footer */}
+      <footer style={{
+        marginTop: 'auto',
+        padding: '15px 0',
+        textAlign: 'center',
+        color: '#666',
+        fontSize: '14px'
+      }}>
+        © 2025 FiduDocs. Tous droits réservés.
+      </footer>
+    </div>
+  );
+};
+
+export default Login;
