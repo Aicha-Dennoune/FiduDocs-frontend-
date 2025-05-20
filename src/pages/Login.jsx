@@ -22,10 +22,11 @@ const Login = () => {
         password: motDePasse,
       });
 
-      const utilisateur = response.data.utilisateur;
+      const { utilisateur, token } = response.data;
 
-      // Stockage dans le localStorage ou dans un state global (auth)
+      // Stockage dans le localStorage
       localStorage.setItem('utilisateur', JSON.stringify(utilisateur));
+      localStorage.setItem('token', token);
 
       // Redirection en fonction du rôle
       if (utilisateur.role === 'Fiduciaire') {
