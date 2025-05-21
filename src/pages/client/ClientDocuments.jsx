@@ -36,15 +36,47 @@ const ClientDocuments = () => {
         console.error('Erreur lors de la récupération des documents reçus:', error);
       }
     };
-
+    const fetchDocumentsPoses = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:5000/api/client-documents/poses', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setDocumentsPoses(response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des documents posés:', error);
+      }
+    };
     fetchDocumentsRecus();
+    fetchDocumentsPoses();
   }, []);
 
-  const handleAddDocument = (e) => {
+  const handleAddDocument = async (e) => {
     e.preventDefault();
-    // Ici, vous devrez implémenter l'appel API pour ajouter un document
-    // Une fois que le backend sera prêt
-    setShowModal(false);
+    try {
+      const token = localStorage.getItem('token');
+      const form = new FormData();
+      form.append('description', formData.description);
+      form.append('type', formData.type);
+      form.append('fichier', formData.fichier);
+      await axios.post('http://localhost:5000/api/client-documents/', form, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      setShowModal(false);
+      setFormData({ description: '', type: '', fichier: null });
+      // Rafraîchir la liste
+      const response = await axios.get('http://localhost:5000/api/client-documents/poses', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setDocumentsPoses(response.data);
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du document:', error);
+    }
   };
 
   const handleDownload = async (doc) => {
@@ -56,12 +88,10 @@ const ClientDocuments = () => {
         },
         responseType: 'blob'
       });
-
-      // Créer un lien de téléchargement
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', doc.nomFichier);
+      link.setAttribute('download', doc.fichier);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -70,9 +100,21 @@ const ClientDocuments = () => {
     }
   };
 
-  const handleDelete = (document) => {
-    // Ici, vous devrez implémenter l'appel API pour supprimer un document
-    // Une fois que le backend sera prêt
+  const handleDelete = async (doc) => {
+    if (!window.confirm('Voulez-vous vraiment supprimer ce document ?')) return;
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/api/client-documents/${doc.Id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Rafraîchir la liste
+      const response = await axios.get('http://localhost:5000/api/client-documents/poses', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setDocumentsPoses(response.data);
+    } catch (error) {
+      console.error('Erreur lors de la suppression du document:', error);
+    }
   };
 
   const TableauDocuments = ({ documents, titre, showAddButton, showDelete }) => (
@@ -127,16 +169,7 @@ const ClientDocuments = () => {
               <tr key={doc.Id} style={{ borderBottom: '1px solid #f0f0f0' }}>
                 <td style={tdStyle}>{doc.nomFiduciaire}</td>
                 <td style={tdStyle}>{doc.description}</td>
-                <td style={tdStyle}>
-                  <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: 8 
-                  }}>
-                    <FaFileAlt color="#004085" />
-                    {doc.type}
-                  </div>
-                </td>
+                <td style={tdStyle}>{doc.type}</td>
                 <td style={tdStyle}>{new Date(doc.date).toLocaleDateString()}</td>
                 <td style={tdStyle}>
                   <div style={{ display: 'flex', gap: 8 }}>
