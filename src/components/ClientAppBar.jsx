@@ -23,7 +23,7 @@ const AppBar = () => {
 
   const handleProfileNav = () => {
     setMenuOpen(false);
-    navigate('/profil');
+    navigate('/client/profil');
   };
 
   return (

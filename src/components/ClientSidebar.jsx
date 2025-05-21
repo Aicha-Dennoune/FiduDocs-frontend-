@@ -3,7 +3,7 @@ import { FaHome, FaFileAlt, FaUsers, FaCalendarAlt, FaEnvelope, FaCog } from 're
 import logo2 from '../assets/logo2.png';
 import { useNavigate } from 'react-router-dom';
 
-const Sidebar = () => {
+const ClientSidebar = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('utilisateur'));
 
@@ -12,7 +12,7 @@ const Sidebar = () => {
   };
 
   const handleProfileNav = () => {
-    navigate('/profil');
+    navigate('/client/profil');
   };
 
   return (
@@ -34,12 +34,12 @@ const Sidebar = () => {
         <div style={{ height: 1, backgroundColor: '#EBF3FF', margin: '12px 24px' }} />
 
         <nav>
-          <SidebarItem icon={<FaHome />} label="Dashboard" active={window.location.pathname === '/dashboard-fiduciaire'} onClick={() => handleSidebarNav('/dashboard-fiduciaire')} />
-          <SidebarItem icon={<FaFileAlt />} label="Documents" active={window.location.pathname === '/documents'} onClick={() => handleSidebarNav('/documents')} />
-          <SidebarItem icon={<FaUsers />} label="Mon fiduciaire" active={window.location.pathname === '/mon-fiduciaire'} onClick={() => handleSidebarNav('/mon-fiduciaire')} />
-          <SidebarItem icon={<FaCalendarAlt />} label="Rendez-vous" active={window.location.pathname === '/rendez-vous'} onClick={() => handleSidebarNav('/rendez-vous')} />
-          <SidebarItem icon={<FaEnvelope />} label="Messages" active={window.location.pathname === '/messages'} onClick={() => handleSidebarNav('/messages')} />
-          <SidebarItem icon={<FaCog />} label="Paramètres" active={window.location.pathname === '/parametres'} onClick={() => handleSidebarNav('/parametres')} />
+          <SidebarItem icon={<FaHome />} label="Dashboard" active={window.location.pathname === '/dashboard-client'} onClick={() => handleSidebarNav('/dashboard-client')} />
+          <SidebarItem icon={<FaFileAlt />} label="Documents" active={window.location.pathname === '/client/documents'} onClick={() => handleSidebarNav('/client/documents')} />
+          <SidebarItem icon={<FaUsers />} label="Mon fiduciaire" active={window.location.pathname === '/client/mon-fiduciaire'} onClick={() => handleSidebarNav('/client/mon-fiduciaire')} />
+          <SidebarItem icon={<FaCalendarAlt />} label="Rendez-vous" active={window.location.pathname === '/client/rendez-vous'} onClick={() => handleSidebarNav('/client/rendez-vous')} />
+          <SidebarItem icon={<FaEnvelope />} label="Messages" active={window.location.pathname === '/client/messages'} onClick={() => handleSidebarNav('/client/messages')} />
+          <SidebarItem icon={<FaCog />} label="Paramètres" active={window.location.pathname === '/client/parametres'} onClick={() => handleSidebarNav('/client/parametres')} />
         </nav>
       </div>
 
@@ -127,4 +127,4 @@ const SidebarItem = ({ icon, label, active, onClick }) => (
   </div>
 );
 
-export default Sidebar;
+export default ClientSidebar;

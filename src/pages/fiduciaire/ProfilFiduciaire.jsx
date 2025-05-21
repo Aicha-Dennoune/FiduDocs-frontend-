@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import FiduciaireLayout from '../components/FiduciaireLayout';
+import FiduciaireLayout from '../../components/FiduciaireLayout';
 import { FaUserEdit, FaSave } from 'react-icons/fa';
 
-const Profil = () => {
+const ProfilFiduciaire = () => {
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState({});
@@ -212,5 +212,4 @@ const LabelValue = ({ label, name, value, editMode, onChange, disabled }) => (
   </div>
 );
 
-export default Profil; 
-
+export default ProfilFiduciaire; 

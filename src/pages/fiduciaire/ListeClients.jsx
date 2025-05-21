@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import FiduciaireLayout from '../components/FiduciaireLayout';
+import FiduciaireLayout from '../../components/FiduciaireLayout';
 
 const ListeClients = () => {
   const [clients, setClients] = useState([]);
@@ -8,7 +8,19 @@ const ListeClients = () => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/clients')
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Non authentifié');
+      setLoading(false);
+      return;
+    }
+
+    fetch('http://localhost:5000/api/clients', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then(res => {
         if (!res.ok) throw new Error('Erreur lors du chargement des clients');
         return res.json();
@@ -18,6 +30,7 @@ const ListeClients = () => {
         setLoading(false);
       })
       .catch(err => {
+        console.error('Erreur:', err);
         setError('Erreur lors du chargement des clients');
         setLoading(false);
       });
@@ -100,6 +113,7 @@ const thStyle = {
   borderBottom: '2px solid #cfd8dc',
   textAlign: 'left',
 };
+
 const tdStyle = {
   padding: '8px 12px',
   fontSize: 15,

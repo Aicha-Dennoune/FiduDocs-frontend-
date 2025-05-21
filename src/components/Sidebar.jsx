@@ -12,7 +12,7 @@ const Sidebar = () => {
   };
 
   const handleProfileNav = () => {
-    navigate('/profil');
+    navigate('/fiduciaire/profil');
   };
 
   return (
@@ -35,11 +35,11 @@ const Sidebar = () => {
 
         <nav>
           <SidebarItem icon={<FaHome />} label="Dashboard" active={window.location.pathname === '/dashboard-fiduciaire'} onClick={() => handleSidebarNav('/dashboard-fiduciaire')} />
-          <SidebarItem icon={<FaFileAlt />} label="Documents" active={window.location.pathname === '/documents'} onClick={() => handleSidebarNav('/documents')} />
-          <SidebarItem icon={<FaUsers />} label="Liste clients" active={window.location.pathname === '/liste-clients'} onClick={() => handleSidebarNav('/liste-clients')} />
-          <SidebarItem icon={<FaCalendarAlt />} label="Rendez-vous" active={window.location.pathname === '/rendez-vous'} onClick={() => handleSidebarNav('/rendez-vous')} />
-          <SidebarItem icon={<FaEnvelope />} label="Messages" active={window.location.pathname === '/messages'} onClick={() => handleSidebarNav('/messages')} />
-          <SidebarItem icon={<FaCog />} label="Paramètres" active={window.location.pathname === '/parametres'} onClick={() => handleSidebarNav('/parametres')} />
+          <SidebarItem icon={<FaFileAlt />} label="Documents" active={window.location.pathname === '/fiduciaire/documents'} onClick={() => handleSidebarNav('/fiduciaire/documents')} />
+          <SidebarItem icon={<FaUsers />} label="Liste clients" active={window.location.pathname === '/fiduciaire/liste-clients'} onClick={() => handleSidebarNav('/fiduciaire/liste-clients')} />
+          <SidebarItem icon={<FaCalendarAlt />} label="Rendez-vous" active={window.location.pathname === '/fiduciaire/rendez-vous'} onClick={() => handleSidebarNav('/fiduciaire/rendez-vous')} />
+          <SidebarItem icon={<FaEnvelope />} label="Messages" active={window.location.pathname === '/fiduciaire/messages'} onClick={() => handleSidebarNav('/fiduciaire/messages')} />
+          <SidebarItem icon={<FaCog />} label="Paramètres" active={window.location.pathname === '/fiduciaire/parametres'} onClick={() => handleSidebarNav('/fiduciaire/parametres')} />
         </nav>
       </div>
 
