@@ -47,10 +47,10 @@ const ClientDocuments = () => {
     setShowModal(false);
   };
 
-  const handleDownload = async (document) => {
+  const handleDownload = async (doc) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/client-documents/${document.id}/download`, {
+      const response = await axios.get(`http://localhost:5000/api/client-documents/${doc.Id}/download`, {
         headers: {
           Authorization: `Bearer ${token}`
         },
@@ -61,7 +61,7 @@ const ClientDocuments = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', document.nomFichier);
+      link.setAttribute('download', doc.nomFichier);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -124,7 +124,7 @@ const ClientDocuments = () => {
           </thead>
           <tbody>
             {documents.map(doc => (
-              <tr key={doc.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
+              <tr key={doc.Id} style={{ borderBottom: '1px solid #f0f0f0' }}>
                 <td style={tdStyle}>{doc.nomFiduciaire}</td>
                 <td style={tdStyle}>{doc.description}</td>
                 <td style={tdStyle}>
