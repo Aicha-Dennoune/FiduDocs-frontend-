@@ -21,7 +21,7 @@ const ChoixInscription = () => {
     <div style={{ backgroundColor: '#EBF3FF', minHeight: '100vh', fontFamily: 'Arial, sans-serif' }}>
       {/* Header */}
 <Container fluid className="d-flex justify-content-between align-items-center px-4" style={{ paddingTop: '-27px', paddingBottom: '5px' }}>
-        <div style={{ maxWidth: '160px' }}>
+        <div style={{ maxWidth: '160px', cursor: 'pointer' }} onClick={() => navigate('/')}>
           <img src={logo} alt="Logo" style={{ width: '100%', height: 'auto' }} />
         </div>
         <div>
@@ -83,7 +83,7 @@ const ChoixInscription = () => {
 
             <div className="d-flex justify-content-center">
               <Button type="submit" variant="dark" style={{ borderRadius: '8px', padding: '10px 24px' }}>
-                S’inscrire
+                S'inscrire
               </Button>
             </div>
           </Form>
