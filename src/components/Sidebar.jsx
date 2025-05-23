@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaHome, FaFileAlt, FaUsers, FaCalendarAlt, FaEnvelope, FaCog } from 'react-icons/fa';
 import logo2 from '../assets/logo2.png';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,26 @@ import { useNavigate } from 'react-router-dom';
 const Sidebar = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('utilisateur'));
+  const [unread, setUnread] = useState(0);
+
+  // Charger le nombre de messages non lus
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    const fetchUnread = () => {
+      fetch('http://localhost:5000/api/messages/unread/fiduciaire', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => setUnread(data.unread || 0));
+    };
+    fetchUnread();
+    // Rafraîchir quand un message est lu
+    window.addEventListener('messagesRead', fetchUnread);
+    return () => {
+      window.removeEventListener('messagesRead', fetchUnread);
+    };
+  }, []);
 
   const handleSidebarNav = (route) => {
     navigate(route);
@@ -41,7 +61,23 @@ const Sidebar = () => {
           <SidebarItem icon={<FaFileAlt />} label="Documents" active={window.location.pathname === '/fiduciaire/documents'} onClick={() => handleSidebarNav('/fiduciaire/documents')} />
           <SidebarItem icon={<FaUsers />} label="Liste clients" active={window.location.pathname === '/fiduciaire/liste-clients'} onClick={() => handleSidebarNav('/fiduciaire/liste-clients')} />
           <SidebarItem icon={<FaCalendarAlt />} label="Rendez-vous" active={window.location.pathname === '/fiduciaire/rendez-vous'} onClick={() => handleSidebarNav('/fiduciaire/rendez-vous')} />
-          <SidebarItem icon={<FaEnvelope />} label="Messages" active={window.location.pathname === '/fiduciaire/messages'} onClick={() => handleSidebarNav('/fiduciaire/messages')} />
+          <SidebarItem icon={
+            <span style={{ position: 'relative' }}>
+              <FaEnvelope />
+              {unread > 0 && (
+                <span style={{
+                  position: 'absolute',
+                  top: -4,
+                  right: -4,
+                  width: 10,
+                  height: 10,
+                  background: '#d32f2f',
+                  borderRadius: '50%',
+                  display: 'inline-block'
+                }} />
+              )}
+            </span>
+          } label="Messages" active={window.location.pathname === '/fiduciaire/messages'} onClick={() => handleSidebarNav('/fiduciaire/messages')} />
           <SidebarItem icon={<FaCog />} label="Paramètres" active={window.location.pathname === '/fiduciaire/parametres'} onClick={() => handleSidebarNav('/fiduciaire/parametres')} />
         </nav>
       </div>

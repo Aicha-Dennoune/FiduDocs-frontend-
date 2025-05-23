@@ -10,6 +10,7 @@ const MessagesFiduciaire = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [clientsWithUnread, setClientsWithUnread] = useState(new Set());
   const messagesEndRef = useRef(null);
   const user = JSON.parse(localStorage.getItem('utilisateur'));
   const token = localStorage.getItem('token');
@@ -20,10 +21,23 @@ const MessagesFiduciaire = () => {
     async function fetchClients() {
       try {
         const res = await axios.get('http://localhost:5000/api/clients', { headers });
-        console.log('Clients reçus:', res.data); // Log pour debug
+        console.log('Clients reçus:', res.data);
         setClients(res.data);
+        // Vérifier les messages non lus pour chaque client
+        const unreadClients = new Set();
+        for (const client of res.data) {
+          try {
+            const unreadRes = await axios.get(`http://localhost:5000/api/messages/unread/client/${client.Id}`, { headers });
+            if (unreadRes.data.unread > 0) {
+              unreadClients.add(client.Id);
+            }
+          } catch (err) {
+            console.error(`Erreur lors de la vérification des messages non lus pour le client ${client.Id}:`, err);
+          }
+        }
+        setClientsWithUnread(unreadClients);
       } catch (err) {
-        setClients([]); // fallback vide
+        setClients([]);
       }
     }
     fetchClients();
@@ -38,6 +52,16 @@ const MessagesFiduciaire = () => {
       try {
         const res = await axios.get(`http://localhost:5000/api/messages/${selectedClient.Id}`, { headers });
         setMessages(res.data);
+        // Marquer comme lus les messages de ce client
+        await axios.post(`http://localhost:5000/api/messages/read/client/${selectedClient.Id}`, {}, { headers });
+        // Mettre à jour l'état des messages non lus
+        setClientsWithUnread(prev => {
+          const next = new Set(prev);
+          next.delete(selectedClient.Id);
+          return next;
+        });
+        // Déclencher un event global pour rafraîchir la sidebar
+        window.dispatchEvent(new Event('messagesRead'));
       } catch (err) {
         setMessages([]);
       } finally {
@@ -131,7 +155,18 @@ const MessagesFiduciaire = () => {
                       {client.Prenom?.[0]}{client.Nom?.[0]}
                     </div>
                   )}
-                  <span>{client.Prenom} {client.Nom}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
+                    <span>{client.Prenom} {client.Nom}</span>
+                    {clientsWithUnread.has(client.Id) && (
+                      <span style={{
+                        width: 8,
+                        height: 8,
+                        background: '#d32f2f',
+                        borderRadius: '50%',
+                        display: 'inline-block'
+                      }} />
+                    )}
+                  </div>
                 </div>
               ))
             )}
@@ -156,22 +191,32 @@ const MessagesFiduciaire = () => {
             <div style={{ flex: 1, overflowY: 'auto', padding: 24, background: '#F8FAFC', display: 'flex', flexDirection: 'column' }}>
               {loading ? <div>Chargement...</div> :
                 selectedClient && messages.length === 0 ? <div style={{ color: '#888' }}>Aucun message.</div> :
-                messages.map((msg, idx) => (
-                  <div key={msg.Id || idx} style={{ display: 'flex', justifyContent: msg.Expediteur === user.Id ? 'flex-start' : 'flex-end', marginBottom: 10 }}>
-                    <div style={{
-                      background: msg.Expediteur === user.Id ? '#e6e6e6' : '#004085',
-                      color: msg.Expediteur === user.Id ? '#222' : '#fff',
-                      borderRadius: 16,
-                      padding: '10px 18px',
-                      maxWidth: 350,
-                      fontSize: 16,
-                      boxShadow: '0 1px 4px #e0e0e0',
+                messages.map((msg, idx) => {
+                  const expediteurId = msg.Expediteur ?? msg.expediteur;
+                  const isMine = String(expediteurId) === String(user.id);
+                  return (
+                    <div key={msg.Id || idx} style={{
+                      display: 'flex',
+                      justifyContent: isMine ? 'flex-end' : 'flex-start',
+                      marginBottom: 10
                     }}>
-                      {msg.Contenu || msg.contenu}
-                      <div style={{ fontSize: 12, color: msg.Expediteur === user.Id ? '#888' : '#cce0ff', marginTop: 4, textAlign: msg.Expediteur === user.Id ? 'left' : 'right' }}>{msg.heure || ''}</div>
+                      <div style={{
+                        background: isMine ? '#1976d2' : '#e6e6e6',
+                        color: isMine ? '#fff' : '#222',
+                        borderRadius: 18,
+                        padding: '12px 20px',
+                        maxWidth: 350,
+                        fontSize: 16,
+                        boxShadow: isMine ? '0 2px 8px #b3d1f7' : '0 1px 4px #e0e0e0',
+                        textAlign: isMine ? 'right' : 'left',
+                        fontWeight: isMine ? 500 : 400
+                      }}>
+                        {msg.Contenu || msg.contenu}
+                        <div style={{ fontSize: 12, color: isMine ? '#cce0ff' : '#888', marginTop: 4, textAlign: isMine ? 'right' : 'left' }}>{msg.heure || ''}</div>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               }
               <div ref={messagesEndRef} />
             </div>

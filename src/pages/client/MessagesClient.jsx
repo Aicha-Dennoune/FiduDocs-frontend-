@@ -20,6 +20,10 @@ const MessagesClient = () => {
       try {
         const res = await axios.get(`http://localhost:5000/api/messages/2`, { headers });
         setMessages(res.data);
+        // Marquer comme lus après chargement
+        await axios.post('http://localhost:5000/api/messages/read/client', {}, { headers });
+        // Déclencher un event global pour rafraîchir la sidebar
+        window.dispatchEvent(new Event('messagesRead'));
       } catch (err) {
         setMessages([]);
       } finally {
@@ -62,6 +66,9 @@ const MessagesClient = () => {
       console.error("Erreur lors de l'envoi du message:", err?.response?.data || err.message || err);
     }
   };
+
+  // Log pour debug alignement messages
+  console.log('messages', messages, 'user.id', user.id);
 
   return (
     <ClientLayout>
@@ -108,22 +115,32 @@ const MessagesClient = () => {
             <div style={{ flex: 1, overflowY: 'auto', padding: 24, background: '#F8FAFC', display: 'flex', flexDirection: 'column' }}>
               {loading ? <div>Chargement...</div> :
                 messages.length === 0 ? <div style={{ color: '#888' }}>Aucun message.</div> :
-                messages.map((msg, idx) => (
-                  <div key={msg.Id || idx} style={{ display: 'flex', justifyContent: msg.Expediteur === user.Id ? 'flex-start' : 'flex-end', marginBottom: 10 }}>
-                    <div style={{
-                      background: msg.Expediteur === user.Id ? '#e6e6e6' : '#004085',
-                      color: msg.Expediteur === user.Id ? '#222' : '#fff',
-                      borderRadius: 16,
-                      padding: '10px 18px',
-                      maxWidth: 350,
-                      fontSize: 16,
-                      boxShadow: '0 1px 4px #e0e0e0',
+                messages.map((msg, idx) => {
+                  const expediteurId = msg.Expediteur ?? msg.expediteur;
+                  const isMine = String(expediteurId) === String(user.id);
+                  return (
+                    <div key={msg.Id || idx} style={{
+                      display: 'flex',
+                      justifyContent: isMine ? 'flex-end' : 'flex-start',
+                      marginBottom: 10
                     }}>
-                      {msg.Contenu || msg.contenu}
-                      <div style={{ fontSize: 12, color: msg.Expediteur === user.Id ? '#888' : '#cce0ff', marginTop: 4, textAlign: msg.Expediteur === user.Id ? 'left' : 'right' }}>{msg.heure || ''}</div>
+                      <div style={{
+                        background: isMine ? '#1976d2' : '#e6e6e6',
+                        color: isMine ? '#fff' : '#222',
+                        borderRadius: 18,
+                        padding: '12px 20px',
+                        maxWidth: 350,
+                        fontSize: 16,
+                        boxShadow: isMine ? '0 2px 8px #b3d1f7' : '0 1px 4px #e0e0e0',
+                        textAlign: isMine ? 'right' : 'left',
+                        fontWeight: isMine ? 500 : 400
+                      }}>
+                        {msg.Contenu || msg.contenu}
+                        <div style={{ fontSize: 12, color: isMine ? '#cce0ff' : '#888', marginTop: 4, textAlign: isMine ? 'right' : 'left' }}>{msg.heure || ''}</div>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               }
               <div ref={messagesEndRef} />
             </div>
