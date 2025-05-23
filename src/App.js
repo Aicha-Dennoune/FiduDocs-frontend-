@@ -14,6 +14,8 @@ import ClientDocuments from './pages/client/ClientDocuments';
 import ProfilFiduciaire from './pages/fiduciaire/ProfilFiduciaire';
 import ListeClients from './pages/fiduciaire/ListeClients';
 import FiduciaireDocuments from './pages/fiduciaire/Documents';
+import MessagesFiduciaire from './pages/fiduciaire/MessagesFiduciaire';
+import MessagesClient from './pages/client/MessagesClient';
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
         <Route path="/fiduciaire/profil" element={<ProfilFiduciaire />} />
         <Route path="/fiduciaire/liste-clients" element={<ListeClients />} />
         <Route path="/fiduciaire/documents" element={<FiduciaireDocuments />} />
+        <Route path="/fiduciaire/messages" element={<MessagesFiduciaire />} />
+        <Route path="/client/messages" element={<MessagesClient />} />
 
         {/* Routes Client */}
         <Route path="/dashboard-client" element={<DashboardClient />} />

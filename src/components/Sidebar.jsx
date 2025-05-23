@@ -23,9 +23,12 @@ const Sidebar = () => {
       flexDirection: 'column',
       justifyContent: 'space-between',
       padding: '32px 0 24px 0',
-      color: '#EBF3FF'
+      color: '#EBF3FF',
+      height: '100vh',
+      boxSizing: 'border-box',
+      minHeight: 0
     }}>
-      <div>
+      <div style={{ flex: 1, minHeight: 0 }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <img src={logo2} alt="Logo" style={{ width: 120, height: 120, marginTop: -43, marginLeft: -86, objectFit: 'contain' }} />
           <span style={{ display: 'block', fontWeight: 'bold', fontSize: 17, color: '#EBF3FF', letterSpacing: 1, marginTop: -77, marginLeft: 35 }}>FiduDocs</span>
@@ -44,43 +47,42 @@ const Sidebar = () => {
       </div>
 
       <div
-  style={{
-    background: 'rgba(255, 255, 255, 0.54)',
-    borderRadius: 16,
-    margin: '0 24px',
-    padding: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-    cursor: 'pointer',
-    color: '#004085',
-    width: '96%',            // ✅ largeur définie ici
-    alignSelf: 'center'      // ✅ pour centrer si la sidebar est en flex column
-  }}
-  onClick={handleProfileNav}
->
-
-  <div style={{
-    width: 48,
-    height: 48,
-    borderRadius: '50%',
-    background: '#EBF3FF',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    color: '#004085',
-    fontSize: 22,
-    flexShrink: 0
-  }}>
-    {user?.prenom?.[0] || ''}{user?.nom?.[0] || ''}
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column' }}>
-    <div style={{ fontWeight: 'bold', fontSize: 15 }}>{user?.prenom} {user?.nom}</div>
-    <div style={{ fontSize: 13 }}>{user?.email}</div>
-  </div>
-</div>
+        style={{
+          background: 'rgba(255, 255, 255, 0.54)',
+          borderRadius: 16,
+          margin: '0 24px',
+          padding: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          cursor: 'pointer',
+          color: '#004085',
+          width: '96%',
+          alignSelf: 'center'
+        }}
+        onClick={handleProfileNav}
+      >
+        <div style={{
+          width: 48,
+          height: 48,
+          borderRadius: '50%',
+          background: '#EBF3FF',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: 'bold',
+          color: '#004085',
+          fontSize: 22,
+          flexShrink: 0
+        }}>
+          {user?.prenom?.[0] || ''}{user?.nom?.[0] || ''}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ fontWeight: 'bold', fontSize: 15 }}>{user?.prenom} {user?.nom}</div>
+          <div style={{ fontSize: 13 }}>{user?.email}</div>
+        </div>
+      </div>
     </aside>
   );
 };
