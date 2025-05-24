@@ -9,6 +9,7 @@ import DashboardClient from './pages/DashboardClient';
 import ProfilClient from './pages/client/ProfilClient';
 import MonFiduciaire from './pages/client/MonFiduciaire';
 import ClientDocuments from './pages/client/ClientDocuments';
+import RendezVousClient from './pages/client/RendezVousClient';
 
 // Pages Fiduciaire
 import ProfilFiduciaire from './pages/fiduciaire/ProfilFiduciaire';
@@ -16,6 +17,7 @@ import ListeClients from './pages/fiduciaire/ListeClients';
 import FiduciaireDocuments from './pages/fiduciaire/Documents';
 import MessagesFiduciaire from './pages/fiduciaire/MessagesFiduciaire';
 import MessagesClient from './pages/client/MessagesClient';
+import RendezVousFiduciaire from './pages/fiduciaire/RendezVousFiduciaire';
 
 function App() {
   return (
@@ -34,12 +36,14 @@ function App() {
         <Route path="/fiduciaire/liste-clients" element={<ListeClients />} />
         <Route path="/fiduciaire/documents" element={<FiduciaireDocuments />} />
         <Route path="/fiduciaire/messages" element={<MessagesFiduciaire />} />
+        <Route path="/fiduciaire/rendez-vous" element={<RendezVousFiduciaire />} />
         <Route path="/client/messages" element={<MessagesClient />} />
 
         {/* Routes Client */}
         <Route path="/dashboard-client" element={<DashboardClient />} />
         <Route path="/client/profil" element={<ProfilClient/>} />
         <Route path="/client/mon-fiduciaire" element={<MonFiduciaire />} />
+        <Route path="/client/Rendez-vous" element={<RendezVousClient />} />
         <Route path="/client/documents" element={<ClientDocuments />} />
       </Routes>
     </Router>
