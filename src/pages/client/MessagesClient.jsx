@@ -21,10 +21,13 @@ const MessagesClient = () => {
         const res = await axios.get(`http://localhost:5000/api/messages/2`, { headers });
         setMessages(res.data);
         // Marquer comme lus après chargement
-        await axios.post('http://localhost:5000/api/messages/read/client', {}, { headers });
+        console.log('Tentative de marquer les messages comme lus...');
+        const markAsReadRes = await axios.post('http://localhost:5000/api/messages/read/client', {}, { headers });
+        console.log('Réponse du marquage comme lus:', markAsReadRes.data);
         // Déclencher un event global pour rafraîchir la sidebar
         window.dispatchEvent(new Event('messagesRead'));
       } catch (err) {
+        console.error('Erreur lors du chargement/marquage des messages:', err);
         setMessages([]);
       } finally {
         setLoading(false);

@@ -41,6 +41,9 @@ const MessagesFiduciaire = () => {
       }
     }
     fetchClients();
+    // Rafraîchir la liste toutes les 30 secondes
+    const interval = setInterval(fetchClients, 30000);
+    return () => clearInterval(interval);
     // eslint-disable-next-line
   }, []);
 
@@ -72,12 +75,12 @@ const MessagesFiduciaire = () => {
     // eslint-disable-next-line
   }, [selectedClient]);
 
-  // Scroll auto en bas UNIQUEMENT quand les messages changent ET un message a été ajouté (pas à l'ouverture de la page)
+  // Scroll auto en bas quand les messages changent ou quand on ouvre une conversation
   useEffect(() => {
     if (messages.length > 0 && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, selectedClient]);
 
   // Envoi d'un message
   const handleSend = async (e) => {
@@ -96,6 +99,12 @@ const MessagesFiduciaire = () => {
       // Recharge la discussion pour garantir la persistance et l'ordre
       const res = await axios.get(`http://localhost:5000/api/messages/${selectedClient.Id}`, { headers });
       setMessages(res.data);
+      // Scroll en bas après l'envoi
+      setTimeout(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
     } catch (err) {
       // gestion d'erreur (optionnel)
     }
@@ -155,7 +164,7 @@ const MessagesFiduciaire = () => {
                       {client.Prenom?.[0]}{client.Nom?.[0]}
                     </div>
                   )}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, justifyContent: 'space-between' }}>
                     <span>{client.Prenom} {client.Nom}</span>
                     {clientsWithUnread.has(client.Id) && (
                       <span style={{
@@ -163,7 +172,8 @@ const MessagesFiduciaire = () => {
                         height: 8,
                         background: '#d32f2f',
                         borderRadius: '50%',
-                        display: 'inline-block'
+                        display: 'inline-block',
+                        marginLeft: 'auto'
                       }} />
                     )}
                   </div>

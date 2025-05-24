@@ -20,9 +20,12 @@ const ClientSidebar = () => {
         .then(data => setUnread(data.unread || 0));
     };
     fetchUnread();
+    // Rafraîchir toutes les 30 secondes
+    const interval = setInterval(fetchUnread, 30000);
     // Rafraîchir quand un message est lu
     window.addEventListener('messagesRead', fetchUnread);
     return () => {
+      clearInterval(interval);
       window.removeEventListener('messagesRead', fetchUnread);
     };
   }, []);
