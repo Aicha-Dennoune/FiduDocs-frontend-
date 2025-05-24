@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import FiduciaireLayout from '../../components/FiduciaireLayout';
+import { FaTrash } from 'react-icons/fa';
 
 const ListeClients = () => {
   const [clients, setClients] = useState([]);
@@ -41,6 +42,22 @@ const ListeClients = () => {
     client.Nom.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Suppression d'un client
+  const handleDelete = async (id) => {
+    if (!window.confirm('Voulez-vous vraiment supprimer ce client ? Cette action est définitive.')) return;
+    const token = localStorage.getItem('token');
+    try {
+      const res = await fetch(`http://localhost:5000/api/clients/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Erreur lors de la suppression');
+      setClients(prev => prev.filter(c => c.Id !== id));
+    } catch (err) {
+      alert('Erreur lors de la suppression du client');
+    }
+  };
+
   return (
     <FiduciaireLayout>
       <div style={{ padding: 32 }}>
@@ -80,6 +97,7 @@ const ListeClients = () => {
                     <th style={thStyle}>Type</th>
                     <th style={thStyle}>Adresse</th>
                     <th style={thStyle}>Nom entreprise</th>
+                    <th style={thStyle}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -94,6 +112,9 @@ const ListeClients = () => {
                         {client.TypeClient === 'Particulier' ? client.AdresseParticulier : client.AdresseEntreprise}
                       </td>
                       <td style={tdStyle}>{client.TypeClient === 'Entreprise' ? client.NomEntreprise : '-'}</td>
+                      <td style={{ ...tdStyle, textAlign: 'center' }}>
+                        <FaTrash style={{ color: '#d32f2f', cursor: 'pointer' }} title="Supprimer" onClick={() => handleDelete(client.Id)} />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
