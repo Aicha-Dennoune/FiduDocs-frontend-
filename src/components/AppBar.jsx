@@ -39,12 +39,13 @@ const AppBar = () => {
               totalUnread += unreadData.unread;
             }
           } catch (err) {
-            // ignore
+            console.error('Erreur lors de la récupération des messages non lus:', err);
           }
         }
         setClientsWithUnread(unreadClients);
         setUnread(totalUnread);
       } catch (err) {
+        console.error('Erreur lors de la récupération des clients:', err);
         setClientsWithUnread([]);
         setUnread(0);
       }
@@ -59,6 +60,18 @@ const AppBar = () => {
     };
     // eslint-disable-next-line
   }, []);
+
+  // Mettre à jour notifLastCount si l'utilisateur change (ex: logout/login)
+  React.useEffect(() => {
+    setNotifLastCount(Number(localStorage.getItem(notifKey) || 0));
+    // eslint-disable-next-line
+  }, [user?.id]);
+
+  // Synchroniser notifLastCount avec le localStorage à chaque changement d'utilisateur ou de unread
+  React.useEffect(() => {
+    setNotifLastCount(Number(localStorage.getItem(notifKey) || 0));
+    // eslint-disable-next-line
+  }, [user?.id, unread]);
 
   const handleLogout = () => {
     localStorage.removeItem('utilisateur');
@@ -80,11 +93,13 @@ const AppBar = () => {
     navigate('/fiduciaire/profil');
   };
 
-  // Ouvrir la cloche : mettre à jour le compteur de notifications vues
+  // Ouvrir la cloche : mettre à jour le compteur de notifications vues uniquement à l'ouverture
   const handleNotifClick = () => {
     setNotifOpen((open) => !open);
-    setNotifLastCount(unread);
-    localStorage.setItem(notifKey, String(unread));
+    if (!notifOpen) {
+      setNotifLastCount(unread);
+      localStorage.setItem(notifKey, String(unread));
+    }
   };
 
   // Le point rouge s'affiche si unread > notifLastCount
