@@ -21,17 +21,21 @@ const StatistiquesCirculaires = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  const user = JSON.parse(localStorage.getItem('utilisateur'));
+  const isClient = user?.role?.toLowerCase() === 'client';
+
   const data = {
     labels: ['Documents posés', 'Documents reçus'],
     datasets: [
       {
-        data: [stats.postes, stats.recus],
+        data: isClient ? [stats.recus, stats.postes] : [stats.postes, stats.recus],
         backgroundColor: ['#23B7D3', '#2B5C8A'],
         borderWidth: 2,
         hoverOffset: 8,
       },
     ],
   };
+
   const options = {
     cutout: '70%',
     plugins: {
@@ -53,6 +57,7 @@ const StatistiquesCirculaires = () => {
     responsive: true,
     maintainAspectRatio: false,
   };
+
   if (loading) return <div style={{textAlign:'center',padding:'40px'}}>Chargement…</div>;
   return (
     <div style={{ width: 260, height: 220, margin: '0 auto' }}>
