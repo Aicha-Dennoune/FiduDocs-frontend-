@@ -1,17 +1,36 @@
 import React from 'react';
 import ClientLayout from '../components/ClientLayout';
+import StatistiquesCirculaires from '../components/StatistiquesCirculaires';
+import CalendrierRdv from '../components/CalendrierRdv';
+import '../calendar-custom.css';
 
 const DashboardClient = () => {
+  // Récupérer l'utilisateur connecté
+  const user = JSON.parse(localStorage.getItem('utilisateur'));
+
+  React.useEffect(() => {
+    if (!user) {
+      window.location.href = '/login';
+    }
+  }, [user]);
+
   return (
     <ClientLayout>
-      <div style={{ padding: 32 }}>
-        <h2 style={{ color: '#004085', marginBottom: 24 }}>Dashboard Client</h2>
-        <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 8px rgba(0,64,133,0.07)', padding: 24, minHeight: 200 }}>
-          <p style={{ color: '#888' }}>Bienvenue sur votre espace client.</p>
+      <main style={{ flex: 1, padding: '40px 48px', background: '#F5F7FA' }}>
+        <h2 style={{ color: '#004085', fontWeight: 'bold', marginBottom: 32 }}>Tableau de bord</h2>
+        <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: 320, background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.07)', padding: 32, marginBottom: 32 }}>
+            <h4 style={{ color: '#004085', fontWeight: 'bold' }}>Statistiques</h4>
+            <StatistiquesCirculaires postes={14} recus={9} />
+          </div>
+          <div style={{ flex: 1, minWidth: 320, background: '#fff', borderRadius: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.07)', padding: 32, marginBottom: 32 }}>
+            <h4 style={{ color: '#004085', fontWeight: 'bold' }}>Calendrier des rendez-vous</h4>
+            <CalendrierRdv />
+          </div>
         </div>
-      </div>
+      </main>
     </ClientLayout>
   );
 };
 
-export default DashboardClient; 
+export default DashboardClient;

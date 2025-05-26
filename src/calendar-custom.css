@@ -1,0 +1,19 @@
+.rdv-vert {
+  background: #16c784 !important;
+  color: #fff !important;
+  border-radius: 50% !important;
+}
+.rdv-jaune {
+  background: #ffd600 !important;
+  color: #222 !important;
+  border-radius: 50% !important;
+}
+.rdv-rouge {
+  background: #e74c3c !important;
+  color: #fff !important;
+  border-radius: 50% !important;
+}
+.react-calendar__tile:disabled {
+  background: #f5f7fa !important;
+  color: #ccc !important;
+} 
