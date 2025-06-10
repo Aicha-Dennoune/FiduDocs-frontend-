@@ -6,10 +6,10 @@ const MonFiduciaire = () => {
   const fiduciaireInfo = {
     nom: 'Bamir',
     prenom: 'Laila',
-    email: 'fiduciaredocs@gmail.com',
-    telephone: '0681226435',
+    email: 'Tarwijconsultant@gmail.com',
+    telephone: '0604125038',
     role: 'Fiduciaire',
-    adresse: '10 labelle vie, Safi'
+    adresse: '17 immeuble G avenue Mly Idriss plateau ville nouvelle, Safi'
   };
 
   return (

@@ -70,9 +70,9 @@ const HomePage = () => {
             <div className="mt-0">
               <h5 style={{ fontWeight: 'bold', color: '#004085' }}>Contact</h5>
               <p style={{ lineHeight: '1.7' }}>
-                📍 56, la belle vie Safi, Maroc<br />
-                📧 fiduciaredocs@gmail.com<br />
-                📞 +212 681226435
+                📍 17 immeuble G avenue Mly Idriss plateau ville nouvelle ,Safi<br />
+                📧 Tarwijconsultant@gmail.com<br />
+                📞 +212 604125038
               </p>
             </div>
           </Col>
